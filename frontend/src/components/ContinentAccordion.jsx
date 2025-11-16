@@ -46,18 +46,18 @@ const ContinentAccordion = ({ continent, coinSummary, openContinentId, setOpenCo
   return (
     <div className="bg-white rounded-lg mb-4 shadow-md overflow-hidden">
       <div
-        className="p-5 cursor-pointer flex justify-between items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all"
+        className="p-4 sm:p-5 cursor-pointer flex justify-between items-center bg-gradient-to-r from-green-700 to-green-800 text-white hover:from-green-800 hover:to-green-900 transition-all"
         onClick={handleToggle}
       >
-        <h2 className="text-xl font-bold m-0">{continent.name}</h2>
-        <span className="text-xl">{isOpen ? '▼' : '▶'}</span>
+        <h2 className="text-lg sm:text-xl font-bold m-0">{continent.name}</h2>
+        <span className="text-lg sm:text-xl">{isOpen ? '▼' : '▶'}</span>
       </div>
       {isOpen && (
-        <div className="p-5">
+        <div className="p-4 sm:p-5">
           {loading ? (
-            <div className="text-center py-5 text-gray-600">Loading countries...</div>
+            <div className="text-center py-5 text-gray-600 text-sm">Loading countries...</div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
               {countries.map((country) => {
                 // Ensure we coerce counts safely (coinSummary may be an object or empty initially)
                 const count = Number((coinSummary && coinSummary[country._id]) || 0);

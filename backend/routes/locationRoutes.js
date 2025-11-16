@@ -21,6 +21,7 @@ router.post('/continent', async (req, res) => {
     await continent.save();
     res.status(201).json(continent);
   } catch (error) {
+    console.error('Create continent error:', error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -48,6 +49,7 @@ router.post('/country', async (req, res) => {
     await country.save();
     res.status(201).json(country);
   } catch (error) {
+    console.error('Create country error:', error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -58,6 +60,26 @@ router.get('/continents', async (req, res) => {
     const continents = await Location.find({ type: 'continent' }).sort({ displayOrder: 1 });
     res.json(continents);
   } catch (error) {
+    console.error('Get continents error:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Search countries by name (case-insensitive, partial match)
+router.get('/search', async (req, res) => {
+  try {
+    const q = (req.query.q || '').trim();
+    if (!q) {
+      return res.json([]);
+    }
+    const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+    const results = await Location.find({ type: 'country', name: regex })
+      .sort({ name: 1 })
+      .limit(20)
+      .select('_id name parent');
+    res.json(results);
+  } catch (error) {
+    console.error('Search countries error:', error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -69,6 +91,7 @@ router.get('/:continentId/countries', async (req, res) => {
     const countries = await Location.find({ type: 'country', parent: continentId }).sort({ name: 1 });
     res.json(countries);
   } catch (error) {
+    console.error('Get countries error:', error);
     res.status(500).json({ message: error.message });
   }
 });
@@ -83,6 +106,7 @@ router.get('/:id', async (req, res) => {
     }
     res.json(location);
   } catch (error) {
+    console.error('Get location error:', error);
     res.status(500).json({ message: error.message });
   }
 });

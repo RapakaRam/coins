@@ -4,6 +4,7 @@ import api from '../services/api';
 import ConfirmModal from '../components/ConfirmModal';
 import AddCoinModal from '../components/AddCoinModal';
 import EditCoinModal from '../components/EditCoinModal';
+import CoinDetailModal from '../components/CoinDetailModal';
 
 const Gallery = () => {
   const { countryId } = useParams();
@@ -18,6 +19,7 @@ const Gallery = () => {
   const [deleting, setDeleting] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editCoinId, setEditCoinId] = useState(null);
+  const [selectedCoin, setSelectedCoin] = useState(null);
 
   useEffect(() => {
     fetchCoins();
@@ -41,12 +43,8 @@ const Gallery = () => {
     }
   };
 
-  const handleImageClick = (coin) => {
-    // images are displayed inline now; no click action required
-  };
-
   const handleDeleteClick = (e, coin) => {
-    e.stopPropagation(); // Prevent image modal from opening
+    e.stopPropagation();
     setCoinToDelete(coin);
   };
 
@@ -61,15 +59,13 @@ const Gallery = () => {
     try {
       setDeleting(true);
       await api.delete(`/coins/${coinToDelete._id}`);
-      
-      // Remove coin from state
       setCoins(coins.filter(coin => coin._id !== coinToDelete._id));
       setCoinToDelete(null);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to delete coin');
-      setCoinToDelete(null);
     } finally {
       setDeleting(false);
+      setCoinToDelete(null);
     }
   };
 
@@ -94,49 +90,47 @@ const Gallery = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-5">
-      <header className="bg-white rounded-lg shadow-md p-5 mb-5 flex items-start justify-between">
+    <div className="min-h-screen bg-gray-100 p-4 sm:p-5">
+      <header className="bg-gradient-to-r from-green-700 to-green-800 rounded-lg shadow-md p-4 sm:p-5 mb-5 flex flex-col sm:flex-row items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
             {countryName || 'Coin Gallery'}
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-green-100 text-base sm:text-lg">
             {coins.length} {coins.length === 1 ? 'coin' : 'coins'}
           </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 w-full sm:w-auto flex-col sm:flex-row">
+          <button
+            className="px-4 py-2.5 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm sm:text-base font-semibold"
+            onClick={() => setShowAddModal(true)}
+          >
+            + Add Coin
+          </button>
           <button
             onClick={() => navigate('/home')}
-            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            className="px-4 py-2.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm sm:text-base font-semibold"
           >
             ← Back
           </button>
-          {coins.length > 0 && (
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              onClick={() => setShowAddModal(true)}
-            >
-              + Add Coin
-            </button>
-          )}
         </div>
       </header>
 
       {coins.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-10 text-center">
-          <p className="text-xl text-gray-600 mb-5">
+        <div className="bg-white rounded-lg shadow-md p-8 sm:p-10 text-center border-l-4 border-green-700">
+          <p className="text-lg sm:text-xl text-gray-600 mb-5">
             No coins uploaded for this country yet.
           </p>
           <button
-            className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-5 py-2.5 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-semibold"
             onClick={() => setShowAddModal(true)}
           >
             Add First Coin
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 max-w-7xl mx-auto">
           {coins.map((coin) => {
             const shape = coin.cropShape || 'rect';
             const shapeClass = shape === 'circle' ? 'rounded-full' : 'rounded-lg';
@@ -145,13 +139,26 @@ const Gallery = () => {
             return (
               <div
                 key={coin._id}
-                className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:-translate-y-2 hover:shadow-xl relative group"
+                className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:-translate-y-2 hover:shadow-xl relative group cursor-pointer border-t-4 border-green-700"
+                onClick={() => setSelectedCoin(coin)}
               >
                 {/* Card inner padding to create a rectangular card around images */}
-                <div className="p-4">
-                  <div className={`flex ${coin.backImageBase64 ? 'gap-3' : ''} items-center justify-center`}>
+                <div className="p-3 sm:p-4">
+                  {/* Denomination and Currency */}
+                  {(coin.denomination || coin.currency) && (
+                    <div className="mb-2 sm:mb-3 text-center">
+                      <p className="text-base sm:text-lg font-bold text-green-800">
+                        {coin.denomination && coin.currency 
+                          ? `${coin.denomination} ${coin.currency}`
+                          : coin.denomination || coin.currency
+                        }
+                      </p>
+                    </div>
+                  )}
+                  
+                  <div className={`flex ${coin.backImageBase64 ? 'gap-2 sm:gap-3' : ''} items-center justify-center`}>
                     {/* Front image */}
-                    <div className={`${coin.backImageBase64 ? 'flex-1' : 'w-full'} ${shape === 'circle' ? 'aspect-square' : 'h-48'} flex items-center justify-center bg-gray-50`}>
+                    <div className={`${coin.backImageBase64 ? 'flex-1' : 'w-full'} ${shape === 'circle' ? 'aspect-square' : 'h-40 sm:h-48'} flex items-center justify-center bg-gray-50 rounded`}>
                       <img
                         src={`data:image/jpeg;base64,${coin.frontImageBase64 || coin.imageBase64}`}
                         alt="Coin Front"
@@ -162,7 +169,7 @@ const Gallery = () => {
 
                     {/* Back image (if present) */}
                     {coin.backImageBase64 && (
-                      <div className={`flex-1 ${shape === 'circle' ? 'aspect-square' : 'h-48'} flex items-center justify-center bg-gray-50`}>
+                      <div className={`flex-1 ${shape === 'circle' ? 'aspect-square' : 'h-40 sm:h-48'} flex items-center justify-center bg-gray-50 rounded`}>
                         <img
                           src={`data:image/jpeg;base64,${coin.backImageBase64}`}
                           alt="Coin Back"
@@ -175,10 +182,10 @@ const Gallery = () => {
                 </div>
 
               {/* Move edit/delete icons to bottom-right of the card */}
-              <div className="absolute bottom-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+              <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 flex gap-1 sm:gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                 <button
                   onClick={(e) => handleEditClick(e, coin)}
-                  className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 shadow-lg"
+                  className="bg-green-700 text-white p-2 rounded-full hover:bg-green-800 shadow-lg text-sm"
                   title="Edit coin"
                 >
                   <svg
@@ -239,6 +246,12 @@ const Gallery = () => {
         onClose={() => setEditCoinId(null)}
         coinId={editCoinId}
         onSuccess={fetchCoins}
+      />
+
+      <CoinDetailModal
+        isOpen={!!selectedCoin}
+        onClose={() => setSelectedCoin(null)}
+        coin={selectedCoin}
       />
     </div>
   );

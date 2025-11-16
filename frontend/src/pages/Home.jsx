@@ -12,16 +12,16 @@ const Home = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [showAddModal, setShowAddModal] = useState(false);
+  // Country search state
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     fetchData();
-    // restore last-open continent (if any)
-    try {
-      const openId = sessionStorage.getItem('openContinentId');
-      if (openId) setOpenContinentId(openId);
-    } catch (e) {
-      // ignore
-    }
+    const openId = sessionStorage.getItem('openContinentId');
+    if (openId) setOpenContinentId(openId);
   }, []);
 
   const fetchData = async () => {
@@ -53,6 +53,36 @@ const Home = () => {
     navigate('/');
   };
 
+  // Debounced country search
+  useEffect(() => {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) {
+      setResults([]);
+      setShowDropdown(false);
+      return;
+    }
+    setSearchLoading(true);
+    const t = setTimeout(async () => {
+      try {
+        const { data } = await api.get('/locations/search', { params: { q: trimmedQuery } });
+        setResults(data || []);
+        setShowDropdown(!!data?.length);
+      } catch (e) {
+        setResults([]);
+        setShowDropdown(false);
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 250);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  const handleSelectCountry = (country) => {
+    setShowDropdown(false);
+    setQuery(country.name);
+    navigate(`/gallery/${country._id}`);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -71,11 +101,11 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow-md p-5 mb-5 flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-800">🪙 Coin Collector</h1>
-        <div className="flex gap-3">
+      <header className="bg-gradient-to-r from-green-700 to-green-800 shadow-md p-4 sm:p-5 mb-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">🪙 Coin Collector</h1>
+        <div className="flex gap-3 w-full sm:w-auto flex-col sm:flex-row">
           <button
-            className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2.5 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm sm:text-base font-semibold"
             onClick={() => setShowAddModal(true)}
           >
             + Add Coin
@@ -88,7 +118,7 @@ const Home = () => {
         onSuccess={fetchData}
       />
           <button
-            className="px-5 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            className="px-4 py-2.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm sm:text-base font-semibold"
             onClick={handleLogout}
           >
             Logout
@@ -96,7 +126,44 @@ const Home = () => {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto p-5">
+      {/* Country Search */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-5">
+        <div className="max-w-xl mx-auto mb-5">
+          <label className="block mb-2 font-semibold text-gray-700 text-sm sm:text-base">Search Countries</label>
+          <div className="relative">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => results.length > 0 && setShowDropdown(true)}
+              placeholder="Type a country name..."
+              className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-700 text-base"
+            />
+            {showDropdown && (
+              <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-auto">
+                {searchLoading ? (
+                  <div className="p-3 text-gray-500 text-sm">Searching...</div>
+                ) : results.length === 0 ? (
+                  <div className="p-3 text-gray-500 text-sm">No results</div>
+                ) : (
+                  results.map((c) => (
+                    <button
+                      key={c._id}
+                      type="button"
+                      onClick={() => handleSelectCountry(c)}
+                      className="w-full text-left px-4 py-2 sm:py-3 hover:bg-green-50 text-sm sm:text-base"
+                    >
+                      {c.name}
+                    </button>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto p-4 sm:p-5">
         {continents.map((continent) => (
           <ContinentAccordion
             key={continent._id}
