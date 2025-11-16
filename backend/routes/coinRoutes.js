@@ -63,7 +63,7 @@ router.get('/summary', async (req, res) => {
 router.get('/coin/:coinId', async (req, res) => {
   try {
     const { coinId } = req.params;
-    const coin = await Coin.findOne({ _id: coinId, userId: req.userId });
+    const coin = await Coin.findOne({ _id: coinId, userId: req.userId }).lean();
     if (!coin) {
       return res.status(404).json({ message: 'Coin not found' });
     }
@@ -125,7 +125,7 @@ router.delete('/:coinId', async (req, res) => {
 router.get('/:countryId', async (req, res) => {
   try {
     const { countryId } = req.params;
-    const coins = await Coin.find({ countryId, userId: req.userId }).sort({ uploadedAt: -1 });
+    const coins = await Coin.find({ countryId, userId: req.userId }).sort({ uploadedAt: -1 }).lean();
     res.json(coins);
   } catch (error) {
     console.error('Get coins error:', error);

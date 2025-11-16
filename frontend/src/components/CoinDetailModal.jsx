@@ -94,4 +94,4 @@ const CoinDetailModal = ({ isOpen, onClose, coin }) => {
   );
 };
 
-export default CoinDetailModal;
+export default React.memo(CoinDetailModal);

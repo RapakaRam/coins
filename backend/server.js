@@ -1,8 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
-const fs = require('fs');
 const connectDB = require('./config/db');
 
 const authRoutes = require('./routes/authRoutes');
@@ -25,44 +23,19 @@ app.use('/api/auth', authRoutes);
 app.use('/api/locations', locationRoutes);
 app.use('/api/coins', coinRoutes);
 
-// Try to find and serve React frontend static files
-let frontendBuildPath = path.join(__dirname, '../frontend/build');
-
-// If frontend build doesn't exist in expected location, check alternate paths
-if (!fs.existsSync(frontendBuildPath)) {
-  console.log(`Frontend build not found at ${frontendBuildPath}`);
-  console.log('Checking alternate paths...');
-  
-  // Try alternate path for Render
-  const alternatePath = path.join(__dirname, '../../../frontend/build');
-  if (fs.existsSync(alternatePath)) {
-    console.log(`Found frontend build at ${alternatePath}`);
-    frontendBuildPath = alternatePath;
-  } else {
-    console.warn('⚠️  Frontend build not found - API only mode');
-    console.warn('Available paths checked:');
-    console.warn(`  - ${frontendBuildPath}`);
-    console.warn(`  - ${alternatePath}`);
-  }
-}
-
-// Serve React frontend static files if available
-if (fs.existsSync(frontendBuildPath)) {
-  console.log(`✓ Serving frontend from: ${frontendBuildPath}`);
-  app.use(express.static(frontendBuildPath));
-  
-  // SPA fallback - serve index.html for all non-API routes
-  app.get('*', (req, res) => {
-    const indexPath = path.join(frontendBuildPath, 'index.html');
-    if (fs.existsSync(indexPath)) {
-      res.sendFile(indexPath);
-    } else {
-      res.status(404).json({ error: 'Frontend not configured' });
+// Health check
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'Coin Collector API',
+    endpoints: {
+      auth: '/api/auth/login, /api/auth/register',
+      locations: '/api/locations',
+      coins: '/api/coins'
     }
   });
-}
+});
 
-// Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK' });
 });

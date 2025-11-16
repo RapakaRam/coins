@@ -57,7 +57,7 @@ router.post('/country', async (req, res) => {
 // Get all continents (in display order)
 router.get('/continents', async (req, res) => {
   try {
-    const continents = await Location.find({ type: 'continent' }).sort({ displayOrder: 1 });
+    const continents = await Location.find({ type: 'continent' }).sort({ displayOrder: 1 }).lean();
     res.json(continents);
   } catch (error) {
     console.error('Get continents error:', error);
@@ -76,7 +76,8 @@ router.get('/search', async (req, res) => {
     const results = await Location.find({ type: 'country', name: regex })
       .sort({ name: 1 })
       .limit(20)
-      .select('_id name parent');
+      .select('_id name parent')
+      .lean();
     res.json(results);
   } catch (error) {
     console.error('Search countries error:', error);
@@ -88,7 +89,7 @@ router.get('/search', async (req, res) => {
 router.get('/:continentId/countries', async (req, res) => {
   try {
     const { continentId } = req.params;
-    const countries = await Location.find({ type: 'country', parent: continentId }).sort({ name: 1 });
+    const countries = await Location.find({ type: 'country', parent: continentId }).sort({ name: 1 }).lean();
     res.json(countries);
   } catch (error) {
     console.error('Get countries error:', error);

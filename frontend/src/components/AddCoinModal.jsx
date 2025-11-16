@@ -468,4 +468,4 @@ const AddCoinModal = ({ isOpen, onClose, preselectContinent = '', preselectCount
   );
 };
 
-export default AddCoinModal;
+export default React.memo(AddCoinModal);

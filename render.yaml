@@ -1,11 +1,11 @@
 services:
-  # Backend API Service (also serves frontend)
+  # Backend API Service
   - type: web
     name: coins-backend
     env: node
     region: oregon
     plan: free
-    buildCommand: node ./build.js
+    buildCommand: cd backend && npm install
     startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV
@@ -17,3 +17,19 @@ services:
       - key: JWT_SECRET
         sync: false
     healthCheckPath: /api/health
+
+  # Frontend Static Site
+  - type: web
+    name: coins-frontend
+    env: static
+    region: oregon
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://coins-backend.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

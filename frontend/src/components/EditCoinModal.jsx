@@ -561,4 +561,4 @@ const EditCoinModal = ({ isOpen, onClose, coinId, onSuccess }) => {
   );
 };
 
-export default EditCoinModal;
+export default React.memo(EditCoinModal);
