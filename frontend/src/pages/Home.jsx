@@ -28,6 +28,7 @@ const Home = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
+      setError('');
       const [continentsRes, summaryRes] = await Promise.all([
         api.get('/locations/continents'),
         api.get('/coins/summary')
@@ -42,7 +43,9 @@ const Home = () => {
       });
       setCoinSummary(summaryObj);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to load data');
+      console.error('fetchData error:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to load data';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

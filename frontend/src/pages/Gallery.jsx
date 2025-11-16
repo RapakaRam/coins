@@ -28,6 +28,7 @@ const Gallery = () => {
   const fetchCoins = async () => {
     try {
       setLoading(true);
+      setError('');
       const [coinsResponse, locationResponse] = await Promise.all([
         api.get(`/coins/${countryId}`),
         api.get(`/locations/${countryId}`)
@@ -37,7 +38,9 @@ const Gallery = () => {
       // For a country, parent is the continent
       setContinentId(locationResponse.data.parent || '');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to load coins');
+      console.error('fetchCoins error:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to load coins';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

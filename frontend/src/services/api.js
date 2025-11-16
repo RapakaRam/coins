@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 
+console.log('[API] Using base URL:', API_BASE_URL);
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -27,6 +29,13 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Log errors for debugging
+    console.error('[API Error]', {
+      status: error.response?.status,
+      message: error.response?.data?.message || error.message,
+      url: error.config?.url
+    });
+
     // Only redirect on 401 if we're NOT on the login page
     if (error.response?.status === 401 && window.location.pathname !== '/') {
       localStorage.removeItem('token');
