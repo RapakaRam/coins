@@ -134,15 +134,14 @@ const Login = () => {
             className="w-full py-3 px-4 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-base sm:text-lg"
             disabled={loading}
           >
-            <span className="hidden sm:inline">{loading ? 'Loading...' : isRegister ? 'Register' : 'Login'}</span>
-            <span className="sm:hidden">{loading ? '⏳' : isRegister ? '📝' : '🔓'}</span>
+            {loading ? 'Loading...' : isRegister ? 'Register' : 'Login'}
           </button>
         </form>
-        <p className="text-center mt-4 sm:mt-6 text-gray-600 text-sm sm:text-base">
-          {isRegister ? 'Already have an account? ' : "Don't have an account? "}
+        <div className=" flex items-center justify-center mt-4 sm:mt-6 text-gray-600 text-sm sm:text-base">
+          <p className="mr-2">{isRegister ? 'Already have an account?' : "Don't have an account?"}</p>
           <button
             type="button"
-            className="text-green-700 underline hover:text-green-800 bg-transparent border-none cursor-pointer"
+            className="text-green-700 hover:text-green-800 bg-transparent border-none cursor-pointer font-semibold underline text-sm sm:text-base"
             onClick={() => {
               setIsRegister(!isRegister);
               setError('');
@@ -150,7 +149,7 @@ const Login = () => {
           >
             {isRegister ? 'Login' : 'Register'}
           </button>
-        </p>
+        </div>
       </div>
     </div>
   );
