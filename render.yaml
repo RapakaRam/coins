@@ -18,14 +18,18 @@ services:
         sync: false
     healthCheckPath: /api/health
 
-  # Frontend Static Site
+  # Frontend Web Service (serves built React app with SPA routing)
   - type: web
     name: coins-frontend
-    env: static
+    env: node
     region: oregon
     plan: free
     buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/build
+    startCommand: cd frontend && npm run start:prod
     envVars:
       - key: REACT_APP_API_URL
         value: https://coins-backend.onrender.com/api
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
