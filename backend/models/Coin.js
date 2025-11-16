@@ -29,6 +29,22 @@ const coinSchema = new mongoose.Schema({
     enum: ['rect', 'square', 'circle'],
     default: 'rect'
   },
+  denomination: {
+    type: String,
+    default: null
+  },
+  currency: {
+    type: String,
+    default: null
+  },
+  year: {
+    type: Number,
+    default: null
+  },
+  notes: {
+    type: String,
+    default: null
+  },
   uploadedAt: {
     type: Date,
     default: Date.now

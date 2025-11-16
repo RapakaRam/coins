@@ -7,16 +7,19 @@
 Go to your backend service settings on Render and add these environment variables:
 
 1. **MONGO_URI**
+
    ```
    mongodb+srv://ramrpk6_db_user:KXLvUEoDLXV9BSV7@cluster0.ijxmjgo.mongodb.net/coin-collector?retryWrites=true&w=majority
    ```
 
 2. **JWT_SECRET**
+
    ```
    /cIhu7NjREp/WvAIyGFvR25FA30gT9aMOYh9o5ztpuM=
    ```
 
 3. **NODE_ENV**
+
    ```
    production
    ```
@@ -45,22 +48,26 @@ Go to your backend service settings on Render and add these environment variable
 
 - **Build Command**: `cd frontend && npm install && npm run build`
 - **Publish Directory**: `frontend/build`
-- **Rewrite Rules**: 
+- **Rewrite Rules**:
   - Source: `/*`
   - Destination: `/index.html`
 
 ## 🧪 Testing After Deployment
 
 1. **Test Backend Root**:
+
    ```
    https://coins-backend.onrender.com/
    ```
+
    Should return API info
 
 2. **Test Health Check**:
+
    ```
    https://coins-backend.onrender.com/api/health
    ```
+
    Should return `{"status":"OK"}`
 
 3. **Test Login Endpoint**:
@@ -75,20 +82,24 @@ Go to your backend service settings on Render and add these environment variable
 ### If you get 404 on login:
 
 1. **Check Environment Variables**:
+
    - Go to Render Dashboard → Your Service → Environment
    - Verify all variables are set correctly
    - Click "Save Changes" if you made updates
 
 2. **Check Frontend API URL**:
+
    - Must be: `https://coins-backend.onrender.com/api`
    - NOT: `https://coins-backend.onrender.com` (missing /api)
    - NOT: `https://coins-backend.onrender.com/api/` (extra trailing slash)
 
 3. **Redeploy Services**:
+
    - Backend: Manual Deploy → Deploy latest commit
    - Frontend: Manual Deploy → Clear build cache & deploy
 
 4. **Check Logs**:
+
    - Render Dashboard → Logs
    - Look for connection errors or missing env vars
 
@@ -107,16 +118,21 @@ Go to your backend service settings on Render and add these environment variable
 ## 📝 Common Issues
 
 ### Issue: "User already exists" but can't login
+
 **Solution**: User might exist with wrong password. Try registering with new email.
 
 ### Issue: CORS errors in browser
+
 **Solution**: Backend CORS is already configured for all origins. Check browser console for exact error.
 
 ### Issue: JWT errors
+
 **Solution**: Make sure JWT_SECRET is exactly the same on Render as in your .env file.
 
 ### Issue: MongoDB connection timeout
-**Solution**: 
+
+**Solution**:
+
 1. Check MongoDB Atlas network access allows 0.0.0.0/0
 2. Verify MONGO_URI has correct credentials
 3. Check if MongoDB cluster is active

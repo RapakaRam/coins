@@ -45,7 +45,9 @@ Frontend will open on: `http://localhost:3000`
 ### Environment Variables
 
 #### Backend (coins-backend)
+
 Set these in Render Dashboard → coins-backend → Environment:
+
 ```
 MONGO_URI=mongodb+srv://ramrpk6_db_user:KXLvUEoDLXV9BSV7@cluster0.ijxmjgo.mongodb.net/coin-collector?retryWrites=true&w=majority
 JWT_SECRET=/cIhu7NjREp/WvAIyGFvR25FA30gT9aMOYh9o5ztpuM=
@@ -54,7 +56,9 @@ PORT=10000
 ```
 
 #### Frontend (coins-frontend)
+
 Set this in Render Dashboard → coins-frontend → Environment:
+
 ```
 REACT_APP_API_URL=https://coins-backend.onrender.com/api
 ```
@@ -79,6 +83,7 @@ git push origin main
 ## 🔄 Switching Environments
 
 ### For Local Development:
+
 ```bash
 # Backend
 cd backend
@@ -90,6 +95,7 @@ cp .env.local .env
 ```
 
 ### To Test Production Settings Locally:
+
 ```bash
 # Backend
 cd backend
@@ -133,6 +139,7 @@ cd backend && node scripts/debugCoins.js
 ## 🐛 Troubleshooting
 
 ### Backend won't start
+
 ```bash
 cd backend
 cp .env.local .env
@@ -141,6 +148,7 @@ npm start
 ```
 
 ### Frontend API errors
+
 ```bash
 cd frontend
 cp .env.local .env
@@ -149,11 +157,13 @@ npm start
 ```
 
 ### Database connection errors
+
 - Check MongoDB Atlas is running
 - Verify MONGO_URI in `.env`
 - Check network access in MongoDB Atlas (allow 0.0.0.0/0)
 
 ### Production 404 errors
+
 - Verify environment variables are set in Render Dashboard
 - Redeploy frontend after setting REACT_APP_API_URL
 - Clear browser cache or try incognito mode

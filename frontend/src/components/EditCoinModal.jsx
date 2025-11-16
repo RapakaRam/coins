@@ -22,6 +22,10 @@ const EditCoinModal = ({ isOpen, onClose, coinId, onSuccess }) => {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [pendingImage, setPendingImage] = useState(null);
+  const [denomination, setDenomination] = useState('');
+  const [currency, setCurrency] = useState('');
+  const [year, setYear] = useState('');
+  const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState('');
@@ -63,6 +67,11 @@ const EditCoinModal = ({ isOpen, onClose, coinId, onSuccess }) => {
         if (coin.backImageBase64) {
           setCurrentBackImage(`data:image/jpeg;base64,${coin.backImageBase64}`);
         }
+        setCropShape(coin.cropShape || 'rect');
+        setDenomination(coin.denomination || '');
+        setCurrency(coin.currency || '');
+        setYear(coin.year ? coin.year.toString() : '');
+        setNotes(coin.notes || '');
       }
     } catch (error) {
       setError('Failed to load coin data');
@@ -162,7 +171,11 @@ const EditCoinModal = ({ isOpen, onClose, coinId, onSuccess }) => {
       const updateData = {
         continentId: selectedContinent,
         countryId: selectedCountry,
-        cropShape
+        cropShape,
+        denomination: denomination || null,
+        currency: currency || null,
+        year: year ? parseInt(year) : null,
+        notes: notes || null
       };
 
       if (frontImageFile) {
@@ -395,6 +408,55 @@ const EditCoinModal = ({ isOpen, onClose, coinId, onSuccess }) => {
                       </button>
                     </div>
                   )}
+                </div>
+              </div>
+
+              {/* Coin Details Section */}
+              <div className="mb-5">
+                <h3 className="text-lg font-semibold text-gray-700 mb-3">Coin Details (Optional)</h3>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-700">Denomination</label>
+                    <input
+                      type="text"
+                      value={denomination}
+                      onChange={(e) => setDenomination(e.target.value)}
+                      placeholder="e.g., 1, 5, 10, 25"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-700">Currency</label>
+                    <input
+                      type="text"
+                      value={currency}
+                      onChange={(e) => setCurrency(e.target.value)}
+                      placeholder="e.g., USD, EUR, INR"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 font-semibold text-gray-700">Year</label>
+                  <input
+                    type="number"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    placeholder="e.g., 2023"
+                    min="1"
+                    max={new Date().getFullYear()}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-700">Notes</label>
+                  <textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    placeholder="Add any additional notes about this coin..."
+                    rows="3"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                  />
                 </div>
               </div>
 
