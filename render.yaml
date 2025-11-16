@@ -1,11 +1,11 @@
 services:
-  # Backend API Service
+  # Backend API Service (also serves frontend)
   - type: web
     name: coins-backend
     env: node
     region: oregon
     plan: free
-    buildCommand: cd backend && npm install
+    buildCommand: npm install && cd frontend && npm install && npm run build && cd ..
     startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV
@@ -17,15 +17,3 @@ services:
       - key: JWT_SECRET
         sync: false
     healthCheckPath: /api/health
-
-  # Frontend Service
-  - type: web
-    name: coins-frontend
-    env: node
-    region: oregon
-    plan: free
-    buildCommand: cd frontend && npm install && npm run build
-    startCommand: cd frontend && npx serve -s build -l 3000
-    envVars:
-      - key: REACT_APP_API_URL
-        sync: false
