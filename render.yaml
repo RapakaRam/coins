@@ -11,12 +11,12 @@ services:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 5001
-      - key: MONGODB_URI
+        value: 10000
+      - key: MONGO_URI
         sync: false
       - key: JWT_SECRET
         sync: false
-    healthCheckPath: /
+    healthCheckPath: /api/health
 
   # Frontend Static Site
   - type: web

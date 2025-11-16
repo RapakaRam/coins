@@ -24,6 +24,18 @@ app.use('/api/locations', locationRoutes);
 app.use('/api/coins', coinRoutes);
 
 // Health check
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'Coin Collector API',
+    endpoints: {
+      auth: '/api/auth/login, /api/auth/register',
+      locations: '/api/locations',
+      coins: '/api/coins'
+    }
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK' });
 });
