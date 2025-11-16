@@ -29,13 +29,3 @@ services:
     envVars:
       - key: REACT_APP_API_URL
         value: https://coins-backend.onrender.com/api
-    routes:
-      - type: rewrite
-        source: /index.html
-        destination: /index.html
-      - type: rewrite
-        source: /
-        destination: /index.html
-      - type: rewrite
-        source: /*
-        destination: /index.html
