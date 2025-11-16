@@ -1,0 +1,45 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm ci
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Trigger Render deployment
+        run: |
+          echo "Deployment will be triggered automatically by Render when code is pushed to main/master"
+          echo "Make sure to set up your Render service to auto-deploy from GitHub"
+
+      - name: Notify deployment
+        run: |
+          echo "✅ Code pushed successfully!"
+          echo "🚀 Render will automatically deploy the changes"
