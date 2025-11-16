@@ -25,7 +25,7 @@ services:
     region: oregon
     plan: free
     buildCommand: cd frontend && npm install && npm run build
-    startCommand: node frontend/server.js
+    startCommand: cd frontend && npx serve -s build -l 3000
     envVars:
       - key: REACT_APP_API_URL
         sync: false
