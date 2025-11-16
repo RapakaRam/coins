@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import Logo from '../components/Logo';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -73,7 +74,10 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-900 via-gray-900 to-black px-4 py-8">
       <div className="bg-white p-6 sm:p-8 md:p-10 rounded-lg shadow-2xl w-full max-w-md">
-        <h1 className="text-center text-2xl sm:text-3xl md:text-4xl mb-2 text-green-700">🪙 Coin Collector</h1>
+        <div className="flex items-center justify-center gap-3">
+          <Logo className="size-10 sm:size-12 text-green-700" />
+          <h1 className="text-2xl sm:text-3xl md:text-4xl text-green-700 font-bold">Coin Collector</h1>
+        </div>
         <h2 className="text-center mb-6 sm:mb-8 text-gray-700 text-lg sm:text-xl md:text-2xl font-semibold">
           {isRegister ? 'Register' : 'Login'}
         </h2>
@@ -130,7 +134,8 @@ const Login = () => {
             className="w-full py-3 px-4 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-base sm:text-lg"
             disabled={loading}
           >
-            {loading ? 'Loading...' : isRegister ? 'Register' : 'Login'}
+            <span className="hidden sm:inline">{loading ? 'Loading...' : isRegister ? 'Register' : 'Login'}</span>
+            <span className="sm:hidden">{loading ? '⏳' : isRegister ? '📝' : '🔓'}</span>
           </button>
         </form>
         <p className="text-center mt-4 sm:mt-6 text-gray-600 text-sm sm:text-base">

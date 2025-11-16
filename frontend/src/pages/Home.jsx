@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import ContinentAccordion from '../components/ContinentAccordion';
 import AddCoinModal from '../components/AddCoinModal';
+import Logo from '../components/Logo';
 
 const Home = () => {
   const [continents, setContinents] = useState([]);
@@ -101,15 +102,31 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <header className="bg-gradient-to-r from-green-700 to-green-800 shadow-md p-4 sm:p-5 mb-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white">🪙 Coin Collector</h1>
-        <div className="flex gap-3 w-full sm:w-auto flex-col sm:flex-row">
+      <header className="bg-gradient-to-r from-green-700 to-green-800 shadow-md p-4 sm:p-5 mb-5 flex justify-between items-center gap-4">
+        <div className="flex items-center gap-2">
+          <Logo className="size-8 sm:size-10 text-white" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Coin Collector</h1>
+        </div>
+        <div className="flex gap-3 items-center">
           <button
-            className="px-4 py-2.5 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm sm:text-base font-semibold"
+            className="px-4 py-2.5 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm sm:text-base font-semibold flex items-center gap-2"
             onClick={() => setShowAddModal(true)}
           >
-            + Add Coin
+            <span className="hidden sm:inline">+ Add Coin</span>
+            <span className="sm:hidden">➕</span>
           </button>
+          <button
+            className="px-4 py-2.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm sm:text-base font-semibold flex items-center gap-2"
+            onClick={handleLogout}
+          >
+            <span className="hidden sm:inline">Logout</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-5 sm:hidden">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
       <AddCoinModal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
@@ -117,14 +134,6 @@ const Home = () => {
         preselectCountry={''}
         onSuccess={fetchData}
       />
-          <button
-            className="px-4 py-2.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm sm:text-base font-semibold"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        </div>
-      </header>
 
       {/* Country Search */}
       <div className="max-w-6xl mx-auto px-4 sm:px-5">

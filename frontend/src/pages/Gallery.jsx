@@ -91,7 +91,7 @@ const Gallery = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-5">
-      <header className="bg-gradient-to-r from-green-700 to-green-800 rounded-lg shadow-md p-4 sm:p-5 mb-5 flex flex-col sm:flex-row items-start justify-between gap-4">
+      <header className="bg-gradient-to-r from-green-700 to-green-800 rounded-lg shadow-md p-4 sm:p-5 mb-5 flex justify-between items-center gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
             {countryName || 'Coin Gallery'}
@@ -101,18 +101,22 @@ const Gallery = () => {
           </p>
         </div>
 
-        <div className="flex gap-3 w-full sm:w-auto flex-col sm:flex-row">
+        <div className="flex gap-3 items-center">
           <button
-            className="px-4 py-2.5 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm sm:text-base font-semibold"
+            className="px-4 py-2.5 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors text-sm sm:text-base font-semibold flex items-center gap-2"
             onClick={() => setShowAddModal(true)}
           >
-            + Add Coin
+            <span className="hidden sm:inline">+ Add Coin</span>
+            <span className="sm:hidden">➕</span>
           </button>
           <button
             onClick={() => navigate('/home')}
-            className="px-4 py-2.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm sm:text-base font-semibold"
+            className="px-4 py-2.5 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm sm:text-base font-semibold flex items-center gap-2"
           >
-            ← Back
+            <span className="hidden sm:inline">← Back</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-5 sm:hidden">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+            </svg>
           </button>
         </div>
       </header>
