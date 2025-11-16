@@ -28,7 +28,7 @@ services:
     staticPublishPath: frontend/build
     envVars:
       - key: REACT_APP_API_URL
-        value: https://coins-backend.onrender.com
+        value: https://coins-backend.onrender.com/api
     routes:
       - type: rewrite
         source: /*
